@@ -2,6 +2,7 @@
 
   "username": "admin",
   "password": "xxxxx",
-  "serveraddress": "servername:port/opds/new"
+  "serveraddress": "servername:port/opds/new",
+   "SMTPServer":"gmail.com"
 
 }
