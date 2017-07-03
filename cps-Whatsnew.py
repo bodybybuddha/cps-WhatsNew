@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 
 gConfig = None
 gLogger = None
+gNewBookTable = None
 
 # modify this to change the Template Directory
 TEMPLATE_DIR = '/templates/'
@@ -40,6 +41,7 @@ def getnewbooks(
 
 ):
     """Routine to query cps to get the latest books added.
+    :rtype: gNewBookTable
 
     """
     gLogger.info('Getting new books from server')
@@ -58,7 +60,9 @@ def getnewbooks(
             if 'authors' in book:
                 print 'Author(s): ' + book.author
             if 'summary' in book:
-                print book.summary
+                print 'Summary: ' + book.summary
+            if 'links' in book:
+                print 'link to icon: ' + book.links[1].href.replace("/cover/", "/thumb_240_240/")
             else:
                 print 'No Summary'
 
@@ -82,6 +86,8 @@ def getconfig(
 
 def main():
     global gLogger
+    global gNewBookTable
+
     setup_logging()
 
     gLogger = logging.getLogger(__name__)
