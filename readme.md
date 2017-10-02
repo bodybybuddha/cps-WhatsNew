@@ -1,5 +1,5 @@
-#cps-What'sNew#
-##Background##
+# cps-What'sNew #
+## Background ##
 I totally love [calibre-web](https://github.com/janeczku/calibre-web) as an interface to my [calibre](https://calibre-ebook.com) collection.  One feature I thought the system could use is a notification or newsletter feature that would allow users of a site know what books have been uploaded.  In addition, I wanted a project to sink my teeth into while learning python.
 
 The result is this project.  I don't know if it'll be supported in the future as its purpose was just to experience python programming, however, I thought it would be great to at least expose the code publicly to give back to the community.
