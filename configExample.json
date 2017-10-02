@@ -3,6 +3,22 @@
   "username": "admin",
   "password": "xxxxx",
   "serveraddress": "servername:port/opds/new",
-   "SMTPServer":"gmail.com"
+  "numofdaysfornotification":"7",
+  "TEMPLATE_FILE": "EmailTemplate.html",
+  "COVER_DIR": "/covers/",
+
+  "SMTPSettings": {
+    "user": "",
+    "password": "",
+    "startttls": "ssl",
+    "host": "smtp.gmail.com",
+    "port": 465,
+    "from": "Book Server",
+    "subject": "What's new?"
+  },
+
+  "DistributionList": [
+    {"addr":"targetuser@domain.com"}
+  ]
 
 }
