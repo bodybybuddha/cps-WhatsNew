@@ -13,10 +13,17 @@ There are two configuration files in the project - one for logging and the other
 
 The other configuration file is a standard JSON formatted configuration file.  The program is so small and its relatively obvious what its supposed to be doing that I don't think its really all that important to write up documentation on each setting.  However, if you have a question, just ask.
 
+### Email Template ###
+The email template is a little.... complicated.  I used Beefe.io to create it.  Great service - but, MAN!, the resulting HTML is pretty involved!  
+
+In any event, I'm embedding a banner image for the email template.  You can find the location in the config file.  If your email doesn't have a banner - remove the appropriate line in the code. 
+
+### Log File ###
+Like I mentioned previously, I put logging into the script (and maybe a little too much.)  I've used the inherient python logging libraries and you can see the configuration in the appropriate logging configuration file. Initially, I set it up for circular logging to save on diskspace. More for my own sanity than anything else.
+
 ## Future Features ##
 There is my first crack at the application.  I have some of the basics down - feed parsing, email templating, etc.  Here are some of the area left to tackle:
 
 1. Book thumbnails
-2. Better HTML template (I stole some CSS as oppose to writing my own - will have to redo this bit.)
-3. Distrubution List mgt - currently system relies on a config file for a list of email addresses for it's distribution list.  It would be nice to tap directly into the calibre-web database.
+2. Distrubution List mgt - currently system relies on a config file for a list of email addresses for it's distribution list.  It would be nice to tap directly into the calibre-web database.
  No newline at end of file
