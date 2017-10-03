@@ -120,7 +120,11 @@ def buildnewsletter(
             loader=jinja2.FileSystemLoader(cd)
         )
 
-        messagebody = jinjaenv.get_template(gConfig['TEMPLATE_FILE']).render(
+        message_template_file = os.path.join(gConfig['TEMPLATE_DIR'], gConfig['TEMPLATE_FILE'])
+        message_banner_img = os.path.join(gConfig['TEMPLATE_DIR'], gConfig['TEMPLATE_BANNER_IMG'])
+        message_unknown_img = os.path.join(gConfig['TEMPLATE_DIR'], gConfig['TEMPLATE_NOCOVER_IMG'])
+
+        messagebody = jinjaenv.get_template(message_template_file).render(
             book_list=book_list
         )
 
@@ -131,7 +135,11 @@ def buildnewsletter(
             message = Message(author=gConfig['SMTPSettings']['user'], to=winner['addr'])
             message.subject = gConfig['SMTPSettings']['subject']
             message.plain = "This is only exciting if you use an HTML capable email client. Please disregard."
+
             message.rich = messagebody
+
+            message.embed(message_banner_img)
+            message.embed(message_unknown_img)
 
             mailer.send(message)
     except:

@@ -5,6 +5,8 @@
   "serveraddress": "servername:port/opds/new",
   "numofdaysfornotification":"7",
   "TEMPLATE_FILE": "EmailTemplate.html",
+  "TEMPLATE_BANNER_IMG": "images/Library_Wikimedia.png",
+  "TEMPLATE_NOCOVER_IMG": "images/Unknown.png",
   "COVER_DIR": "/covers/",
 
   "SMTPSettings": {
