@@ -1,4 +1,4 @@
-# cps-What'sNew #
+# cps-WhatsNew #
 ## Background ##
 I totally love [calibre-web](https://github.com/janeczku/calibre-web) as an interface to my [calibre](https://calibre-ebook.com) collection.  One feature I thought the system could use is a notification or newsletter feature that would allow users of a site know what books have been uploaded.  In addition, I wanted a project to sink my teeth into while learning python.
 
@@ -6,7 +6,7 @@ The result is this project.  I don't know if it'll be supported in the future as
 
 ## General Info ##
 
-Basic python v2 script that will read the opds feed of a calibre-web site (or any other opds feed for that matter - never tested it, but it should work), scan for new books uploaded in a given time frame, then send an email out to a set of interested folks.  
+Basic python v2 script that will read the OPDS feed of a calibre-web site (or any other opds feed for that matter - never tested it, but it should work), scan for new books uploaded in a given time frame, then send an email out to a set of interested folks.  
 
 ### Configuration files ###
 There are two configuration files in the project - one for logging and the other for the project itself.  Coming from a big corporate environment, logging is something I don't see a lot of and I wanted to make it a point of including it right from the beginning as opposed to something that is baked in afterwards.
@@ -14,16 +14,16 @@ There are two configuration files in the project - one for logging and the other
 The other configuration file is a standard JSON formatted configuration file.  The program is so small and its relatively obvious what its supposed to be doing that I don't think its really all that important to write up documentation on each setting.  However, if you have a question, just ask.
 
 ### Email Template ###
-The email template is a little.... complicated.  I used Beefe.io to create it.  Great service - but, MAN!, the resulting HTML is pretty involved!  
+The email template is a little.... complicated.  I used [BeeFree.io](http://Beefree.io) to create it.  Great service - but, MAN!, the resulting HTML is pretty involved!  
 
-In any event, I'm embedding a banner image for the email template.  You can find the location in the config file.  If your email doesn't have a banner - remove the appropriate line in the code. 
+In any event, I'm embedding a banner image for the email template.  You can find the location in the config file.  If your email does not have a banner - remove the appropriate line in the code. 
 
 ### Log File ###
-Like I mentioned previously, I put logging into the script (and maybe a little too much.)  I've used the inherient python logging libraries and you can see the configuration in the appropriate logging configuration file. Initially, I set it up for circular logging to save on diskspace. More for my own sanity than anything else.
+Like I mentioned previously, I put logging into the script (and maybe a little too much.)  I've used the inherent python logging libraries and you can see the configuration in the appropriate logging configuration file. Initially, I set it up for circular logging to save on disk space. More for my own sanity than anything else.
 
 ## Future Features ##
 There is my first crack at the application.  I have some of the basics down - feed parsing, email templating, etc.  Here are some of the area left to tackle:
 
 1. Book thumbnails
-2. Distrubution List mgt - currently system relies on a config file for a list of email addresses for it's distribution list.  It would be nice to tap directly into the calibre-web database.
+2. Distribution List mgt - currently system relies on a config file for a list of email addresses for it's distribution list.  It would be nice to tap directly into the calibre-web database.
  No newline at end of file
