@@ -20,6 +20,7 @@
   },
 
   "DistributionList": [
+    {"addr":"targetuser@domain.com"},
     {"addr":"targetuser@domain.com"}
   ]
 
