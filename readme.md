@@ -21,9 +21,11 @@ In any event, I'm embedding a banner image for the email template.  You can find
 ### Log File ###
 Like I mentioned previously, I put logging into the script (and maybe a little too much.)  I've used the inherent python logging libraries and you can see the configuration in the appropriate logging configuration file. Initially, I set it up for circular logging to save on disk space. More for my own sanity than anything else.
 
-## Future Features ##
-There is my first crack at the application.  I have some of the basics down - feed parsing, email templating, etc.  Here are some of the area left to tackle:
+### Thumbnails ###
+I was able to get to adding thumbnails to the outgoing email.  Unfortunately, I needed the ability to write the thumbnail to disk before embedding it into the email.  I'm sure I don't HAVE to do this, but after awhile it was just easier.  Thus, as a requirement, whatever user you use to run this script, they must have write access to the directory.
 
-1. Book thumbnails
-2. Distribution List mgt - currently system relies on a config file for a list of email addresses for it's distribution list.  It would be nice to tap directly into the calibre-web database.
- No newline at end of file
+## Future Features ##
+
+Distribution List mgt - currently system relies on a config file for a list of email addresses for it's distribution list.  It would be nice to tap directly into the calibre-web database.
+
+
