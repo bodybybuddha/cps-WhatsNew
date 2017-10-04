@@ -11,7 +11,6 @@ import jinja2
 
 gConfig = None
 gLogger = None
-gNewBookTable = None
 
 
 def setup_logging(
@@ -36,42 +35,6 @@ def setup_logging(
                             format='%(asctime)s : %(levelname)s : %(name)s  : %(message)s')
 
 
-def getnewbooks(
-
-):
-    """Routine to query cps to get the latest books added.
-    :rtype: gNewBookTable
-
-    """
-    gLogger.info('Getting new books from server')
-    d = feedparser.parse('http://'
-                         + gConfig['username'] + ':'
-                         + gConfig['password'] + '@'
-                         + gConfig['serveraddress'])
-
-    gLogger.info('Name of the feed:' + d.feed.title)
-    gLogger.info('Looking for books uploaded in the last: ' + str(gConfig['numofdaysfornotification']) + ' days.')
-
-    recentbooks = []
-
-    if d.status == 200:
-        for book in d.entries:
-            dt = datetime.fromtimestamp(mktime(parse_date(book.updated)))
-            if datetime.now() - dt < timedelta(days=int(gConfig['numofdaysfornotification'])):
-                if 'title' in book:
-                    gLogger.info('Found book. Title: ' + book.title)
-                else:
-                    gLogger.info('Found book. Strange, no Title field!')
-
-                # add newly added book to array for use later
-                recentbooks.append(book)
-
-        return recentbooks
-
-    else:
-        gLogger.error('Error getting opds feed! - Please check config. Status Code: ' + str(d.status))
-
-
 def getconfig(
 
 ):
@@ -89,9 +52,44 @@ def getconfig(
         gLogger.exception('Error getting config file: config.json opened.')
 
 
+def getnewbooks(
+
+):
+
+    """Routine to query cps to get the latest books added.
+
+    """
+    gLogger.info('Getting new books from server')
+    d = feedparser.parse('http://'
+                         + gConfig['username'] + ':'
+                         + gConfig['password'] + '@'
+                         + gConfig['serveraddress'])
+
+    gLogger.info('Name of the feed:' + d.feed.title)
+    gLogger.info('Looking for books uploaded in the last: ' + str(gConfig['numofdaysfornotification']) + ' days.')
+
+    recent_books = []
+
+    if d.status == 200:
+        for book in d.entries:
+            dt = datetime.fromtimestamp(mktime(parse_date(book.updated)))
+            if datetime.now() - dt < timedelta(days=int(gConfig['numofdaysfornotification'])):
+                if 'title' in book:
+                    gLogger.info('Found book. Title: ' + book.title)
+                else:
+                    gLogger.info('Found book. Strange, no Title field!')
+
+                # add newly added book to array for use later
+                recent_books.append(book)
+
+        return recent_books
+
+    else:
+        gLogger.error('Error getting opds feed! - Please check config. Status Code: ' + str(d.status))
+
+
 def buildnewsletter(
             book_list
-
 ):
     """Routine to send an HTML newsletter
 
@@ -154,7 +152,6 @@ def buildnewsletter(
 
 def main():
     global gLogger
-    global gNewBookTable
 
     setup_logging()
 
@@ -165,16 +162,15 @@ def main():
     getconfig()
 
     if gConfig:
-        gNewBookTable = getnewbooks()
+        new_book_table = getnewbooks()
 
-        if gNewBookTable:
-            gLogger.info("We found " + str(len(gNewBookTable)) + ' new books.')
-            buildnewsletter(gNewBookTable)
+        if new_book_table:
+            gLogger.info("We found " + str(len(new_book_table)) + ' new books.')
+            buildnewsletter(new_book_table)
         else:
             gLogger.info("We didn't find any books.")
 
     gLogger.info('Finishing script.')
-
 
 if __name__ == "__main__":
     main()
