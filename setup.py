@@ -11,6 +11,6 @@ setup(
     description='Newsletter for calibre-web application',
     requires=[
         'feedparser',
-        'marrow.mailer<4.1', 'jinja2'
+        'marrow.mailer<4.1', 'jinja2', 'PILLOW'
     ]
 )

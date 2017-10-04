@@ -2,6 +2,10 @@ import feedparser
 import os
 import json
 import logging.config
+import urllib2
+import base64
+import cStringIO
+from PIL import Image
 
 from feedparser import _parse_date as parse_date
 from time import mktime
@@ -52,11 +56,43 @@ def getconfig(
         gLogger.exception('Error getting config file: config.json opened.')
 
 
+def get_thumbnail(
+        book_cover_url
+):
+    """Routine to create a thumbnail from a URL that serves up a jpeg
+        Not build a ton of catches in here, just assuming the above!
+    """
+
+    gLogger.debug("Building cover for: %s ", book_cover_url)
+
+    size = 128, 128
+
+    try:
+
+        request = urllib2.Request(book_cover_url)
+        base64string = base64.encodestring('%s:%s' % (gConfig['username'], gConfig['password'])).replace('\n', '')
+        request.add_header("Authorization", "Basic %s" % base64string)
+
+        cover_file = cStringIO.StringIO(urllib2.urlopen(request).read())
+
+        #cover_file = cStringIO.StringIO(urllib2.urlopen(book_cover_url).read())
+
+        img = Image.open(cover_file)
+
+        img.thumbnail(size, Image.ANTIALIAS)
+        return img
+
+    except:
+        gLogger.debug("Couldn't get a cover thumbnail created.")
+        return "no data"
+
+
+
 def getnewbooks(
 
 ):
 
-    """Routine to query cps to get the latest books added.
+    """Routine to query cps to get the latest books added. return array of new books
 
     """
     gLogger.info('Getting new books from server')
@@ -68,6 +104,7 @@ def getnewbooks(
     gLogger.info('Name of the feed:' + d.feed.title)
     gLogger.info('Looking for books uploaded in the last: ' + str(gConfig['numofdaysfornotification']) + ' days.')
 
+    _thumbnail_uri = u'http://opds-spec.org/image/thumbnail'
     recent_books = []
 
     if d.status == 200:
@@ -79,7 +116,31 @@ def getnewbooks(
                 else:
                     gLogger.info('Found book. Strange, no Title field!')
 
-                # add newly added book to array for use later
+                # Need to get a uniqueID for naming the CIDs in the html newsletter - pulling the GUID from the link url
+                # While we are here, might as well find out if the book has a cover
+                #  if the book has a cover set:
+                #        the book_cover_id to the GUID
+                #        pull the url to make it easier to get to
+                #        go get the cover and resize it
+                #  if the book doesn't have a cover, set book_cover_id to 'Unknown.png'
+                for _entry in book.links:
+                    if _entry.rel == _thumbnail_uri:
+
+                        try:
+                            book['book_cover_location'] = _entry.href
+                            book_cover_id = book.link.rsplit('/', 1)[1]
+                            book["book_cover_id"] = book_cover_id
+                            book["cover_thumbnail"] = get_thumbnail(book['book_cover_location'])
+                            gLogger.debug('    Book has cover.')
+                        except:
+                            gLogger.debug('    Error in getting book cover.')
+                            book["book_cover_id"] = "Unknown.png"
+
+                    if book.get('book_cover_id', 'nope') == 'nope':
+                        gLogger.debug('    Book nas no cover.')
+                        book["book_cover_id"] = "Unknown.png"
+
+                # add newly added book to array
                 recent_books.append(book)
 
         return recent_books
@@ -96,6 +157,8 @@ def buildnewsletter(
 
     """
     gLogger.info('Pulling together the newsletter.')
+
+    __tmp__file__loc = "tmpicon.jpg"
 
     mailer = Mailer(dict(
             transport=dict(
@@ -138,6 +201,11 @@ def buildnewsletter(
 
             message.embed(message_banner_img)
             message.embed(message_unknown_img)
+
+            for book in book_list:
+                if book["book_cover_id"] != "Unknown.png":
+                    book['cover_thumbnail'].save(__tmp__file__loc, "JPEG")
+                    message.embed((book["book_cover_id"]), open(__tmp__file__loc))
 
             mailer.send(message)
     except:
