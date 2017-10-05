@@ -65,7 +65,7 @@ def get_thumbnail(
 
     gLogger.debug("Building cover for: %s ", book_cover_url)
 
-    size = 128, 128
+    size = 300, 300
 
     try:
 
