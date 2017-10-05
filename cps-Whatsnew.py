@@ -75,8 +75,6 @@ def get_thumbnail(
 
         cover_file = cStringIO.StringIO(urllib2.urlopen(request).read())
 
-        #cover_file = cStringIO.StringIO(urllib2.urlopen(book_cover_url).read())
-
         img = Image.open(cover_file)
 
         img.thumbnail(size, Image.ANTIALIAS)
@@ -191,27 +189,26 @@ def buildnewsletter(
 
         mailer.start()
 
+        message = Message(author=gConfig['SMTPSettings']['user'])
+        message.subject = gConfig['SMTPSettings']['subject']
+        message.plain = "This is only exciting if you use an HTML capable email client. Please disregard."
+        message.rich = messagebody
+        message.embed(message_banner_img)
+
+        flg_unknown_embedded = False
+
+        for book in book_list:
+            if book["book_cover_id"] != "Unknown.png":
+                book['cover_thumbnail'].save(__tmp__file__loc, "JPEG")
+                message.embed((book["book_cover_id"]), open(__tmp__file__loc))
+            elif book["book_cover_id"] == "Unknown.png" and not flg_unknown_embedded:
+                message.embed(message_unknown_img)
+                flg_unknown_embedded = True
+
         for winner in gConfig['DistributionList']:
-
-            message = Message(author=gConfig['SMTPSettings']['user'], to=winner['addr'])
-            message.subject = gConfig['SMTPSettings']['subject']
-            message.plain = "This is only exciting if you use an HTML capable email client. Please disregard."
-
-            message.rich = messagebody
-
-            message.embed(message_banner_img)
-
-            flg_unknown_embedded = False
-
-            for book in book_list:
-                if book["book_cover_id"] != "Unknown.png":
-                    book['cover_thumbnail'].save(__tmp__file__loc, "JPEG")
-                    message.embed((book["book_cover_id"]), open(__tmp__file__loc))
-                elif book["book_cover_id"] == "Unknown.png" and not flg_unknown_embedded :
-                    message.embed(message_unknown_img)
-                    flg_unknown_embedded = True
-
+            message.to = winner['addr']
             mailer.send(message)
+
     except:
         gLogger.exception('Error sending email.')
 
