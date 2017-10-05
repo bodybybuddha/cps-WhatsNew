@@ -200,12 +200,16 @@ def buildnewsletter(
             message.rich = messagebody
 
             message.embed(message_banner_img)
-            message.embed(message_unknown_img)
+
+            flg_unknown_embedded = False
 
             for book in book_list:
                 if book["book_cover_id"] != "Unknown.png":
                     book['cover_thumbnail'].save(__tmp__file__loc, "JPEG")
                     message.embed((book["book_cover_id"]), open(__tmp__file__loc))
+                elif book["book_cover_id"] == "Unknown.png" and not flg_unknown_embedded :
+                    message.embed(message_unknown_img)
+                    flg_unknown_embedded = True
 
             mailer.send(message)
     except:
