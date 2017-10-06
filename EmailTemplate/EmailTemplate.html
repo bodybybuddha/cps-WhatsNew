@@ -207,7 +207,7 @@ a[x-apple-data-detectors=true] {
                   
                     <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px;"><![endif]-->
 <div style="color:#555555;line-height:120%;font-family:Verdana, Geneva, sans-serif; padding-right: 10px; padding-left: 10px; padding-top: 10px; padding-bottom: 10px;">	
-	<div style="font-size:12px;line-height:14px;font-family:Verdana, Geneva, sans-serif;color:#555555;text-align:left;"><p style="margin: 0;font-size: 12px;line-height: 14px"><span style="font-size: 20px; line-height: 24px;"><strong><span style="line-height: 24px; font-size: 20px;">Hello!</span></strong></span></p><p style="margin: 0;font-size: 12px;line-height: 14px"><span style="font-size: 14px; line-height: 16px;">&#160;</span><br></p><p style="margin: 0;font-size: 12px;line-height: 14px"><span style="font-size: 14px; line-height: 16px;"> I'm trying something new with the Library. &#160;This newsletter will be sent out on a weekly basis - and only if there are new books added to The Library. If you don't want to get the email, send me an email and I'll remove you from the list.</span></p><p style="margin: 0;font-size: 12px;line-height: 14px">&#160;<br></p></div>
+	<div style="font-size:12px;line-height:14px;font-family:Verdana, Geneva, sans-serif;color:#555555;text-align:left;"><p style="margin: 0;font-size: 12px;line-height: 14px"><span style="font-size: 20px; line-height: 24px;"><strong><span style="line-height: 24px; font-size: 20px;">Hello!</span></strong></span></p><p style="margin: 0;font-size: 12px;line-height: 14px"><span style="font-size: 14px; line-height: 16px;">&#160;</span><br></p><p style="margin: 0;font-size: 12px;line-height: 14px"><span style="font-size: 14px; line-height: 16px;"> This week's new books.  Remember, if you don't want to get the email, send me an email and I'll remove you from the list.</span></p><p style="margin: 0;font-size: 12px;line-height: 14px">&#160;<br></p></div>
 </div>
 <!--[if mso]></td></tr></table><![endif]-->
 
@@ -257,7 +257,9 @@ a[x-apple-data-detectors=true] {
                   
                     <div align="center" class="img-container center" style="padding-right: 0px;  padding-left: 0px;">
 <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 0px;" align="center"><![endif]-->
+  <a href="{{book.book_location}}" target="_blank" rel="noopener noreferrer">
   <img class="center" align="center" border="0" src="CID:{{ book.book_cover_id }}" alt="Image" title="Image" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: block !important;border: 0;height: auto;float: none;width: 100%;max-width: 125px" width="125">
+  </a>
 <!--[if mso]></td></tr></table><![endif]-->
 </div>
 
@@ -273,7 +275,11 @@ a[x-apple-data-detectors=true] {
                   
                     <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 0px; padding-top: 0px; padding-bottom: 0px;"><![endif]-->
 <div style="color:#555555;line-height:120%;font-family:Verdana, Geneva, sans-serif; padding-right: 0px; padding-left: 0px; padding-top: 0px; padding-bottom: 0px;">	
-	<div style="font-size:12px;line-height:14px;font-family:Verdana, Geneva, sans-serif;color:#555555;text-align:left;"><p style="margin: 0;font-size: 14px;line-height: 17px"><span style="font-size: 20px; line-height: 24px;"><strong><span style="line-height: 24px; font-size: 20px;">{{book.title}}</span></strong></span></p></div>
+	<div style="font-size:12px;line-height:14px;font-family:Verdana, Geneva, sans-serif;color:#555555;text-align:left;"><p style="margin: 0;font-size: 14px;line-height: 17px"><span style="font-size: 20px; line-height: 24px;"><strong><span style="line-height: 24px; font-size: 20px;">
+    <a href="{{book.book_location}}" target="_blank" rel="noopener noreferrer">
+        {{book.title}}
+    </a>
+    </span></strong></span></p></div>
 </div>
 <!--[if mso]></td></tr></table><![endif]-->
 
@@ -281,7 +287,7 @@ a[x-apple-data-detectors=true] {
                   
                     <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 0px; padding-top: 10px; padding-bottom: 10px;"><![endif]-->
 <div style="color:#C7702E;line-height:120%;font-family:Verdana, Geneva, sans-serif; padding-right: 0px; padding-left: 0px; padding-top: 10px; padding-bottom: 10px;">	
-	<div style="font-family:Verdana, Geneva, sans-serif;font-size:12px;line-height:14px;color:#C7702E;text-align:left;"><p style="margin: 0;font-size: 12px;line-height: 14px"><a style="color:#C7702E" href="#" target="_blank" rel="noopener noreferrer"><strong><span style="font-size: 14px; line-height: 16px;"><span style="text-decoration: underline; font-size: 14px; line-height: 16px;">{{book.author}}</span></span></strong></a></p></div>
+	<div style="font-family:Verdana, Geneva, sans-serif;font-size:12px;line-height:14px;color:#C7702E;text-align:left;"><p style="margin: 0;font-size: 12px;line-height: 14px"><a style="color:#C7702E" href="{{book.book_location}}" target="_blank" rel="noopener noreferrer"><strong><span style="font-size: 14px; line-height: 16px;"><span style="text-decoration: underline; font-size: 14px; line-height: 16px;">{{book.author}}</span></span></strong></a></p></div>
 </div>
 <!--[if mso]></td></tr></table><![endif]-->
 
@@ -289,7 +295,7 @@ a[x-apple-data-detectors=true] {
                   
                     <!--[if mso]><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right: 0px; padding-left: 0px; padding-top: 15px; padding-bottom: 5px;"><![endif]-->
 <div style="color:#aaaaaa;line-height:120%;font-family:Verdana, Geneva, sans-serif; padding-right: 0px; padding-left: 0px; padding-top: 15px; padding-bottom: 5px;">	
-	<div style="font-size:12px;line-height:14px;font-family:Verdana, Geneva, sans-serif;color:#aaaaaa;text-align:left;"><p style="margin: 0;font-size: 14px;line-height: 17px">{{book.summary}}</p></div>
+	<div style="font-size:12px;line-height:14px;font-family:Verdana, Geneva, sans-serif;color:#aaaaaa;text-align:left;"><p style="margin: 0;font-size: 14px;line-height: 17px">{{book.short_summary}}</p></div>
 </div>
 <!--[if mso]></td></tr></table><![endif]-->
 
