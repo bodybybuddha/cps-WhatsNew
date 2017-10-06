@@ -121,22 +121,40 @@ def getnewbooks(
                 #        pull the url to make it easier to get to
                 #        go get the cover and resize it
                 #  if the book doesn't have a cover, set book_cover_id to 'Unknown.png'
+                # Also setup the book_location - we'll use that in the newsletter to point to the book
                 for _entry in book.links:
                     if _entry.rel == _thumbnail_uri:
 
                         try:
-                            book['book_cover_location'] = _entry.href
+                            book['book_location'] = gConfig['serverbookurl'] + (_entry.href.rsplit('/', 1)[1])
                             book_cover_id = book.link.rsplit('/', 1)[1]
                             book["book_cover_id"] = book_cover_id
-                            book["cover_thumbnail"] = get_thumbnail(book['book_cover_location'])
+                            book["cover_thumbnail"] = get_thumbnail(_entry.href)
                             gLogger.debug('    Book has cover.')
                         except:
                             gLogger.debug('    Error in getting book cover.')
                             book["book_cover_id"] = "Unknown.png"
+                            book['book_location'] = "#"
 
                     if book.get('book_cover_id', 'nope') == 'nope':
                         gLogger.debug('    Book nas no cover.')
                         book["book_cover_id"] = "Unknown.png"
+
+                # The book summary that are posted with OPDS feeds can be long
+                # Need to check for the size and if it's beyond a set size, reduce it
+                try:
+                    if len(book['summary']) >= gConfig['SUMMARY_LENGTH']:
+                        book['short_summary'] = book['summary'][:gConfig['SUMMARY_LENGTH']] + "...see site..."
+                        gLogger.debug('    Book summary too long. Being shorten.')
+                    elif len(book['summary']) == 0:
+                        book['short_summary'] = 'No summary information.'
+                        gLogger.debug('    Book summary does not exist.')
+                    else:
+                        book['short_summary'] = book["summary"]
+                        gLogger.debug('    Book summary too long. Being shorten.')
+
+                except:
+                    book['short_summary'] = 'No summary information.'
 
                 # add newly added book to array
                 recent_books.append(book)
