@@ -21,7 +21,7 @@
             "level": "INFO",
             "formatter": "simple",
             "filename": "cps-Whatsnew.log",
-            "maxBytes": 10485760,
+            "maxBytes": 1049600,
             "backupCount": 3,
             "encoding": "utf8"
         }
