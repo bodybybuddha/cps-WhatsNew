@@ -25,12 +25,14 @@ Like I mentioned previously, I put logging into the script (and maybe a little t
 I was able add book thumbnails to the outgoing email.  Unfortunately, I needed the ability to write the thumbnail to disk before embedding it into the email.  I'm sure I don't HAVE to do this, but after awhile it was just easier.  Thus, as a requirement, whatever user you use to run this script, they must have write access to the directory.
 
 ### Distribution List management ###
-I had every intention in linking this script with Calibre-web; however, due to its use of SQLite and no API for user info, I'm forced to keep the distribution list in the configuration file.  I thought about scraping the admin web interface, but that's too kludgy even for me.  
+I originally kept the distribution list in the configuration file, however, after thinking about it for a bit, I decided to go ahead and attempt to add a database table to this script.
 
-As my DL is relativity small, I'll stop any additional improvements here.  If you need more, I would recommend that you use some sort of listserv implementation like Mailman 3.  It'll give the users the ability to opt out, etc.  All you need to do is manually grab the user information from the SQLite db and upload it. 
+A new configuration item in the config file tells the script to either pull the dl members from the configuration file or attempt the db method.
+
+Now - the database is really an overkill feature for this script.  You can simply maintain the dl in the configuration file.  Then I started thinking, what if I attempt to extend the cps database to included the one field I wanted - basically a way of opting out of the newsletter. 
 
 ## Future Features ##
 
-Pretty much done.  Comments/improvements are welcomed!
+Working on db option.
 
 
