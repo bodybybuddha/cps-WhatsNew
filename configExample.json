@@ -22,9 +22,16 @@
     "subject": "What's new?"
   },
 
+  "DLSource":"config",
+
   "DistributionList": [
     {"addr":"targetuser@domain.com"},
     {"addr":"targetuser@domain.com"}
-  ]
+  ],
+
+  "Database": {
+    "cps_db_loc": "/opt/cps/app.db",
+    "extras_db_fn": "extras.db"
+  }
 
 }
