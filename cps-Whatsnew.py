@@ -1,7 +1,9 @@
-import feedparser
-import os
-import json
+
+import logging
 import logging.config
+import feedparser
+import json
+import os
 import urllib2
 import base64
 import cStringIO
@@ -13,8 +15,10 @@ from datetime import datetime, timedelta
 from marrow.mailer import Mailer, Message
 import jinja2
 
-gConfig = None
-gLogger = None
+import config
+import db_operations
+
+logger = None
 
 
 def setup_logging(
@@ -24,6 +28,9 @@ def setup_logging(
 ):
     """Setup logging configuration
 
+        attempt to find the logging config file: logging.json
+        if one can't be found, basic configuration is used
+
     """
     path = default_path
     value = os.getenv(env_key, None)
@@ -31,29 +38,12 @@ def setup_logging(
         path = value
     if os.path.exists(path):
         with open(path, 'rt') as f:
-            config = json.load(f)
-        logging.config.dictConfig(config)
+            logging_config = json.load(f)
+        logging.config.dictConfig(logging_config)
     else:
         logging.basicConfig(level=default_level,
                             filename=__file__ + '.log',
                             format='%(asctime)s : %(levelname)s : %(name)s  : %(message)s')
-
-
-def getconfig(
-
-):
-    """Routine pull in the config file
-
-     """
-    global gConfig
-    gLogger.info('Attempting to get config file.')
-
-    try:
-        with open('config.json', 'r') as f:
-            gConfig = json.load(f)
-            gLogger.info('Opened config file: config.json.')
-    except:
-        gLogger.exception('Error getting config file: config.json opened.')
 
 
 def get_thumbnail(
@@ -63,14 +53,14 @@ def get_thumbnail(
         Not build a ton of catches in here, just assuming the above!
     """
 
-    gLogger.debug("Building cover for: %s ", book_cover_url)
+    logger.debug("Building cover for: %s ", book_cover_url)
 
     size = 300, 300
 
     try:
 
         request = urllib2.Request(book_cover_url)
-        base64string = base64.encodestring('%s:%s' % (gConfig['username'], gConfig['password'])).replace('\n', '')
+        base64string = base64.encodestring('%s:%s' % (config.settings['username'], config.settings['password'])).replace('\n', '')
         request.add_header("Authorization", "Basic %s" % base64string)
 
         cover_file = cStringIO.StringIO(urllib2.urlopen(request).read())
@@ -81,9 +71,8 @@ def get_thumbnail(
         return img
 
     except:
-        gLogger.debug("Couldn't get a cover thumbnail created.")
+        logger.debug("Couldn't get a cover thumbnail created.")
         return "no data"
-
 
 
 def getnewbooks(
@@ -93,14 +82,14 @@ def getnewbooks(
     """Routine to query cps to get the latest books added. return array of new books
 
     """
-    gLogger.info('Getting new books from server')
+    logger.info('Getting new books from server')
     d = feedparser.parse('http://'
-                         + gConfig['username'] + ':'
-                         + gConfig['password'] + '@'
-                         + gConfig['serveraddress'])
+                         + config.settings['username'] + ':'
+                         + config.settings['password'] + '@'
+                         + config.settings['serveraddress'])
 
-    gLogger.info('Name of the feed:' + d.feed.title)
-    gLogger.info('Looking for books uploaded in the last: ' + str(gConfig['numofdaysfornotification']) + ' days.')
+    logger.info('Name of the feed:' + d.feed.title)
+    logger.info('Looking for books uploaded in the last: ' + str(config.settings['numofdaysfornotification']) + ' days.')
 
     _thumbnail_uri = u'http://opds-spec.org/image/thumbnail'
     recent_books = []
@@ -108,11 +97,11 @@ def getnewbooks(
     if d.status == 200:
         for book in d.entries:
             dt = datetime.fromtimestamp(mktime(parse_date(book.updated)))
-            if datetime.now() - dt < timedelta(days=int(gConfig['numofdaysfornotification'])):
+            if datetime.now() - dt < timedelta(days=int(config.settings['numofdaysfornotification'])):
                 if 'title' in book:
-                    gLogger.info('Found book. Title: ' + book.title)
+                    logger.info('Found book. Title: ' + book.title)
                 else:
-                    gLogger.info('Found book. Strange, no Title field!')
+                    logger.info('Found book. Strange, no Title field!')
 
                 # Need to get a uniqueID for naming the CIDs in the html newsletter - pulling the GUID from the link url
                 # While we are here, might as well find out if the book has a cover
@@ -126,32 +115,32 @@ def getnewbooks(
                     if _entry.rel == _thumbnail_uri:
 
                         try:
-                            book['book_location'] = gConfig['serverbookurl'] + (_entry.href.rsplit('/', 1)[1])
+                            book['book_location'] = config.settings['serverbookurl'] + (_entry.href.rsplit('/', 1)[1])
                             book_cover_id = book.link.rsplit('/', 1)[1]
                             book["book_cover_id"] = book_cover_id
                             book["cover_thumbnail"] = get_thumbnail(_entry.href)
-                            gLogger.debug('    Book has cover.')
+                            logger.debug('    Book has cover.')
                         except:
-                            gLogger.debug('    Error in getting book cover.')
+                            logger.debug('    Error in getting book cover.')
                             book["book_cover_id"] = "Unknown.png"
                             book['book_location'] = "#"
 
                     if book.get('book_cover_id', 'nope') == 'nope':
-                        gLogger.debug('    Book nas no cover.')
+                        logger.debug('    Book nas no cover.')
                         book["book_cover_id"] = "Unknown.png"
 
                 # The book summary that are posted with OPDS feeds can be long
                 # Need to check for the size and if it's beyond a set size, reduce it
                 try:
-                    if len(book['summary']) >= gConfig['SUMMARY_LENGTH']:
-                        book['short_summary'] = book['summary'][:gConfig['SUMMARY_LENGTH']] + "...see site..."
-                        gLogger.debug('    Book summary too long. Being shorten.')
+                    if len(book['summary']) >= config.settings['SUMMARY_LENGTH']:
+                        book['short_summary'] = book['summary'][:config.settings['SUMMARY_LENGTH']] + "...see site..."
+                        logger.debug('    Book summary too long. Being shorten.')
                     elif len(book['summary']) == 0:
                         book['short_summary'] = 'No summary information.'
-                        gLogger.debug('    Book summary does not exist.')
+                        logger.debug('    Book summary does not exist.')
                     else:
                         book['short_summary'] = book["summary"]
-                        gLogger.debug('    Book summary too long. Being shorten.')
+                        logger.debug('    Book summary too long. Being shorten.')
 
                 except:
                     book['short_summary'] = 'No summary information.'
@@ -162,7 +151,7 @@ def getnewbooks(
         return recent_books
 
     else:
-        gLogger.error('Error getting opds feed! - Please check config. Status Code: ' + str(d.status))
+        logger.error('Error getting opds feed! - Please check config. Status Code: ' + str(d.status))
 
 
 def buildnewsletter(
@@ -172,18 +161,18 @@ def buildnewsletter(
 
 
     """
-    gLogger.info('Pulling together the newsletter.')
+    logger.info('Pulling together the newsletter.')
 
     __tmp__file__loc = "tmpicon.jpg"
 
     mailer = Mailer(dict(
             transport=dict(
                 use='smtp',
-                host=gConfig['SMTPSettings']['host'],
-                port=gConfig['SMTPSettings']['port'],
-                username=gConfig['SMTPSettings']['user'],
-                password=gConfig['SMTPSettings']['password'],
-                tls=gConfig['SMTPSettings']['startttls']
+                host=config.settings['SMTPSettings']['host'],
+                port=config.settings['SMTPSettings']['port'],
+                username=config.settings['SMTPSettings']['user'],
+                password=config.settings['SMTPSettings']['password'],
+                tls=config.settings['SMTPSettings']['startttls']
             )
         )
     )
@@ -193,22 +182,22 @@ def buildnewsletter(
 
         # Perform jinja
 
-        jinjaenv = jinja2.Environment(
+        jinja_env = jinja2.Environment(
             loader=jinja2.FileSystemLoader(cd)
         )
 
-        message_template_file = os.path.join(gConfig['TEMPLATE_DIR'], gConfig['TEMPLATE_FILE'])
-        message_banner_img = os.path.join(gConfig['TEMPLATE_DIR'], gConfig['TEMPLATE_BANNER_IMG'])
-        message_unknown_img = os.path.join(gConfig['TEMPLATE_DIR'], gConfig['TEMPLATE_NOCOVER_IMG'])
+        message_template_file = os.path.join(config.settings['TEMPLATE_DIR'], config.settings['TEMPLATE_FILE'])
+        message_banner_img = os.path.join(config.settings['TEMPLATE_DIR'], config.settings['TEMPLATE_BANNER_IMG'])
+        message_unknown_img = os.path.join(config.settings['TEMPLATE_DIR'], config.settings['TEMPLATE_NOCOVER_IMG'])
 
-        messagebody = jinjaenv.get_template(message_template_file).render(
+        messagebody = jinja_env.get_template(message_template_file).render(
             book_list=book_list
         )
 
         mailer.start()
 
-        message = Message(author=gConfig['SMTPSettings']['user'])
-        message.subject = gConfig['SMTPSettings']['subject']
+        message = Message(author=config.settings['SMTPSettings']['user'])
+        message.subject = config.settings['SMTPSettings']['subject']
         message.plain = "This is only exciting if you use an HTML capable email client. Please disregard."
         message.rich = messagebody
         message.embed(message_banner_img)
@@ -223,41 +212,46 @@ def buildnewsletter(
                 message.embed(message_unknown_img)
                 flg_unknown_embedded = True
 
-        for winner in gConfig['DistributionList']:
+        for winner in db_operations.get_dl_list():
             message.to = winner['addr']
             mailer.send(message)
 
     except:
-        gLogger.exception('Error sending email.')
+        logger.exception('Error sending email.')
 
     mailer.stop()
 
-    gLogger.info('Completed newsletter routine.')
+    logger.info('Completed newsletter routine.')
 
     return
 
 
-def main():
-    global gLogger
+def main(
+
+):
+    global logger
 
     setup_logging()
 
-    gLogger = logging.getLogger(__name__)
+    logger = logging.getLogger(__name__)
 
-    gLogger.info('Starting script.')
+    logger.info('Starting script.')
 
-    getconfig()
+    config.get_config()
 
-    if gConfig:
+    if config.settings:
         new_book_table = getnewbooks()
 
         if new_book_table:
-            gLogger.info("We found " + str(len(new_book_table)) + ' new books.')
+            logger.info("We found " + str(len(new_book_table)) + ' new books.')
             buildnewsletter(new_book_table)
         else:
-            gLogger.info("We didn't find any books.")
+            logger.info("We didn't find any books.")
+    else:
+        logger.error("Something didn't go right - we didn't get any configuration in config.settings. Please check config.json")
 
-    gLogger.info('Finishing script.')
+    logger.info('Finishing script.')
+
 
 if __name__ == "__main__":
     main()
