@@ -1,8 +1,8 @@
 # cps-WhatsNew #
 ## Background ##
-I totally love [calibre-web](https://github.com/janeczku/calibre-web) as an interface to my [calibre](https://calibre-ebook.com) collection.  One feature I thought the system could use is a notification or newsletter that would inform site users know what books have been uploaded.  In addition, I wanted a project to sink my teeth into while learning Python.
+I totally love [calibre-web](https://github.com/janeczku/calibre-web) as an interface to my [calibre](https://calibre-ebook.com) collection.  One feature I thought the system could use is a notification or newsletter that would inform site users know what books have been uploaded.  In addition, I wanted a project to sink my teeth into with some Python.
 
-The result is this project.  I don't know if it'll be supported in the future as its purpose was just to experience python programming, however, I thought it would be great to at least expose the code publicly to give back to the community.
+The result is this project.  Originally I thought it would be nice just to have a newsletter feature, but now I'm thinking of ways to improve the code.  So for the foreseeable future, I'll be updating this repo a little more frequently.  Additions will be tracked in other git branches.
 
 ## General Info ##
 
@@ -31,6 +31,6 @@ As my DL is relativity small, I'll stop any additional improvements here.  If yo
 
 ## Future Features ##
 
-Pretty much done.  Comments/improvements are welcomed!
+Working on a accessing the cps apps.db file for the distribution list.  This will be an optional feature.
 
 
