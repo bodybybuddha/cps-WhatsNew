@@ -248,7 +248,7 @@ def main(
         else:
             logger.info("We didn't find any books.")
     else:
-        logger.error("Something didn't go right - we didn't get any configuration in config.settings. Please check config.json")
+        logger.error("We didn't get any configuration in config.settings. Please check config.json")
 
     logger.info('Finishing script.')
 
