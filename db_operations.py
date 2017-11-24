@@ -1,6 +1,7 @@
 
 import logging
 import config
+import sqlite3
 
 logger = logging.getLogger(__name__)
 
@@ -20,5 +21,13 @@ def get_dl_list(
         logger.info('Config to use config file for DL list')
         logger.debug('Returning config file DistributionList')
         return config.settings['DistributionList']
-    else:
-        logger.info('Config NOT to use config file for DL list - assumption DB')
+
+    logger.info('Config NOT to use config file for DL list - assumption DB')
+
+    conn = sqlite3.connect(config.settings['Database']['extras_db_fn'])
+
+    # c = conn.cursor()
+    # c.execute('ATTACH DATABASE "db_1.sqlite" AS db_1')
+    # c.execute('SELECT * FROM db_1.my_table')
+    # conn.commit()
+    # c.fetchall()
