@@ -5,41 +5,6 @@ import sqlite3
 
 logger = logging.getLogger(__name__)
 
-
-def create_customdb(
-
-):
-    """
-    This routine will create the custom database
-
-    :return:
-    """
-    logger.info("Need to create the custom database.")
-
-    #Do some interesting stuff to create the database!
-
-    #Once the database is created, we need to update all users in it.
-
-    if update_users_customdb():
-        logger.info("Finished creating & updating custom database.")
-        return True
-    else:
-        logger.error("Issue with updating the custom database.")
-        return False
-
-
-def update_users_customdb(
-
-):
-    """
-    This routine will sync up the users in the custom database with the cps database
-
-    :return:
-    """
-    logger.info("Updating the users in the custom database.")
-    return True
-
-
 def get_dl_list(
 
 ):
@@ -58,10 +23,10 @@ def get_dl_list(
 
     logger.info('Config NOT to use config file for DL list - assumption DB')
 
-    conn = sqlite3.connect(config.settings['Database']['extras_db_fn'])
+    conn = sqlite3.connect(config.settings['Database']['cps_db_loc'])
 
-    # c = conn.cursor()
-    # c.execute('ATTACH DATABASE "db_1.sqlite" AS db_1')
-    # c.execute('SELECT * FROM db_1.my_table')
-    # conn.commit()
-    # c.fetchall()
+    c = conn.cursor()
+    c.execute('ATTACH DATABASE "db_1.sqlite" AS db_1')
+    c.execute('SELECT email FROM db_1.users')
+    conn.commit()
+    c.fetchall()

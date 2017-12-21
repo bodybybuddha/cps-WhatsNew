@@ -32,28 +32,16 @@ def get_config(
 
             logger.info('Configured for database')
 
-            if os.path.exists(settings['Database']['extras_db_fn']):
-                logger.debug("Found database file at {0}".format(settings['Database']['extras_db_fn']))
+            if os.path.exists(settings['Database']['cps_db_loc']):
+                logger.debug("Found database file at {0}".format(settings['Database']['cps_db_loc']))
                 settings['DLSourceExist'] = True
-
-                #Database is there, need to make all of the users are updated
-                if db_operations.update_users_customdb():
-                    logger.info("Returning from updating database.")
-                    return True
-                else:
-                    return False
+                return True
 
             else:
-                logger.error("Did NOT Find database file at {0}".format(settings['Database']['extras_db_fn']))
+                logger.error("Did NOT Find database file at {0}".format(settings['Database']['cps_db_loc']))
 
                 settings['DLSourceExist'] = False
-
-                #Database isn't there, so we need to create it and then load it up
-                if db_operations.create_customdb():
-                    logger.info("Custom database created.")
-                    return True
-                else:
-                    return False
+                return False
 
     except:
         logger.exception('Error getting config file: config.json opened.')
