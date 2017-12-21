@@ -237,9 +237,10 @@ def main(
 
     logger.info('Starting script.')
 
-    config.get_config()
+    #config.settings
 
-    if config.settings:
+    if config.get_config():
+
         new_book_table = getnewbooks()
 
         if new_book_table:
@@ -248,7 +249,7 @@ def main(
         else:
             logger.info("We didn't find any books.")
     else:
-        logger.error("We didn't get any configuration in config.settings. Please check config.json")
+        logger.error("No configuration loaded.")
 
     logger.info('Finishing script.')
 
