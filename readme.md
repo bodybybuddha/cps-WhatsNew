@@ -13,6 +13,8 @@ There are two configuration files in the project - one for logging and the other
 
 The other configuration file is a standard JSON formatted configuration file.  The program is so small and its relatively obvious what its supposed to be doing that I don't think its really all that important to write up documentation on each setting.  However, if you have a question, just ask.
 
+Added a DevMode option in the configuration file.  Basically a true/false setting.  A true will prevent the tool from sending emails out to everyone.
+
 ### Email Template ###
 The email template is a little.... complicated.  I used [BeeFree.io](http://Beefree.io) to create it.  Great service - but, MAN!, the resulting HTML is pretty involved!  
 
@@ -25,12 +27,13 @@ Like I mentioned previously, I put logging into the script (and maybe a little t
 I was able add book thumbnails to the outgoing email.  Unfortunately, I needed the ability to write the thumbnail to disk before embedding it into the email.  I'm sure I don't HAVE to do this, but after awhile it was just easier.  Thus, as a requirement, whatever user you use to run this script, they must have write access to the directory.
 
 ### Distribution List management ###
-I had every intention in linking this script with Calibre-web; however, due to its use of SQLite and no API for user info, I'm forced to keep the distribution list in the configuration file.  I thought about scraping the admin web interface, but that's too kludgy even for me.  
+I originally kept the distribution list in the configuration file, however, after thinking about it for a bit, I decided to go ahead and attempt to add a database query to this script.
 
-As my DL is relativity small, I'll stop any additional improvements here.  If you need more, I would recommend that you use some sort of listserv implementation like Mailman 3.  It'll give the users the ability to opt out, etc.  All you need to do is manually grab the user information from the SQLite db and upload it. 
+A new configuration item,DLSource, in the config file tells the script to either pull the dl members from the configuration file or attempt the db method.  "config" or "db" should be allowed entries.
+
+Also added a DistributionExclusionsList section to the configuration file.  This can be used to eliminate anyone who doesn't want the email.  Note - no@email is a needed value here.
 
 ## Future Features ##
 
-Working on a accessing the cps apps.db file for the distribution list.  This will be an optional feature.
-
+None planned.
 
