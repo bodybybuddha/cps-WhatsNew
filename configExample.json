@@ -1,5 +1,5 @@
 {
-
+  "DevMode": true,
   "username": "admin",
   "password": "xxxxx",
   "serveraddress": "servername(:port)/opds/new",
@@ -25,8 +25,12 @@
   "DLSource":"config",
 
   "DistributionList": [
-    {"addr":"targetuser@domain.com"},
-    {"addr":"targetuser@domain.com"}
+    "targetuser@domain.com",
+    "targetuser@domain.com"
+  ],
+
+  "DistributionExclusionsList": [
+    "no@email"
   ],
 
   "Database": {
