@@ -237,7 +237,7 @@ def main(
 
     logger.info('Starting script.')
 
-    #config.settings
+    # config.settings
 
     if config.get_config():
 

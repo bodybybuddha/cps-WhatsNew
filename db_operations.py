@@ -26,7 +26,7 @@ def get_dl_list(
     conn = sqlite3.connect(config.settings['Database']['cps_db_loc'])
 
     c = conn.cursor()
-    c.execute('ATTACH DATABASE "db_1.sqlite" AS db_1')
-    c.execute('SELECT email FROM db_1.users')
-    conn.commit()
+    #c.execute('ATTACH DATABASE "db_1.sqlite" AS db_1')
+    c.execute('SELECT email FROM users')
+    #conn.commit()
     c.fetchall()
