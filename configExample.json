@@ -30,8 +30,7 @@
   ],
 
   "Database": {
-    "cps_db_loc": "/opt/cps/app.db",
-    "extras_db_fn": "extras.db"
+    "cps_db_loc": "/opt/cps/app.db"
   }
 
 }
