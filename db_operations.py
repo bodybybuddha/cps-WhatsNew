@@ -23,10 +23,25 @@ def get_dl_list(
 
     logger.info('Config NOT to use config file for DL list - assumption DB')
 
-    conn = sqlite3.connect(config.settings['Database']['cps_db_loc'])
+    try:
+        logger.info('Config to use database for DL list')
+        conn = sqlite3.connect(config.settings['Database']['cps_db_loc'])
 
-    c = conn.cursor()
-    #c.execute('ATTACH DATABASE "db_1.sqlite" AS db_1')
-    c.execute('SELECT email FROM users')
-    #conn.commit()
-    c.fetchall()
+        c = conn.cursor()
+        c.execute('SELECT email FROM user order by id')
+        all_emails = c.fetchall()
+        conn.close()
+
+        exclusion_list = config.settings['DistributionExclusionsList']
+
+        final_email_list = [x[0] for x in all_emails if x[0] not in exclusion_list]
+
+        logger.info('Returning list of emails from db.')
+
+        return final_email_list
+
+    except:
+        logger.exception('Issue with getting information from database')
+        return False
+
+
