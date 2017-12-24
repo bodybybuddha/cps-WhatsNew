@@ -23,7 +23,6 @@ def get_config(
             settings = json.load(f)
             logger.info('Opened config file: config.json.')
 
-
         # Since we got the configuration - let's check for the database config setting
         # and do some db operations if needed
         # Allowed values are:  db, config
