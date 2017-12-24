@@ -88,8 +88,12 @@ def getnewbooks(
                          + config.settings['password'] + '@'
                          + config.settings['serveraddress'])
 
-    logger.info('Name of the feed:' + d.feed.title)
-    logger.info('Looking for books uploaded in the last: ' + str(config.settings['numofdaysfornotification']) + ' days.')
+    if d.bozo == 1:
+        logger.error('Username, password, or Server Address url is incorrect.')
+        return False
+    else:
+        logger.info('Name of the feed:' + d.feed.title)
+        logger.info('Looking for books uploaded in the last: ' + str(config.settings['numofdaysfornotification']) + ' days.')
 
     _thumbnail_uri = u'http://opds-spec.org/image/thumbnail'
     recent_books = []
@@ -152,6 +156,7 @@ def getnewbooks(
 
     else:
         logger.error('Error getting opds feed! - Please check config. Status Code: ' + str(d.status))
+        return False
 
 
 def buildnewsletter(
@@ -213,8 +218,14 @@ def buildnewsletter(
                 flg_unknown_embedded = True
 
         for winner in db_operations.get_dl_list():
-            message.to = winner['addr']
-            mailer.send(message)
+
+            message.to = winner
+
+            if config.settings['DevMode']:
+                logger.info('DevMode - Sending email to %s', winner)
+            else:
+                mailer.send(message)
+                logger.info('sending email to %s', winner)
 
     except:
         logger.exception('Error sending email.')
