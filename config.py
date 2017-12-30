@@ -41,6 +41,8 @@ def get_config(
 
                 settings['DLSourceExist'] = False
                 return False
+        else:
+            return True
 
     except:
         logger.exception('Error getting config file: config.json opened.')
