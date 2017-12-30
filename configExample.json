@@ -9,6 +9,7 @@
   "TEMPLATE_FILE": "EmailTemplate.html",
   "TEMPLATE_BANNER_IMG": "images/Library_Wikimedia.png",
   "TEMPLATE_NOCOVER_IMG": "images/Unknown.png",
+  "TEMPLATE_INTROPARA": "NewletterIntroPara.html",
   "COVER_DIR": "/covers/",
   "SUMMARY_LENGTH": 500,
 
