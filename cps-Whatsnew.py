@@ -194,6 +194,16 @@ def buildnewsletter(
         message_template_file = os.path.join(config.settings['TEMPLATE_DIR'], config.settings['TEMPLATE_FILE'])
         message_banner_img = os.path.join(config.settings['TEMPLATE_DIR'], config.settings['TEMPLATE_BANNER_IMG'])
         message_unknown_img = os.path.join(config.settings['TEMPLATE_DIR'], config.settings['TEMPLATE_NOCOVER_IMG'])
+        message_intropara_file = os.path.join(config.settings['TEMPLATE_DIR'], config.settings['TEMPLATE_NOCOVER_IMG'])
+
+        try:
+            with open(message_intropara_file, 'r') as introparafile:
+                message_intropara = introparafile.read().replace('\n', '')
+                logger.info('Loaded newsletter intro paragraph.')
+        except:
+            message_intropara = "<p>New books added.</p>"
+            logger.exception("Couldn't load intro paragraph.")
+            logger.warn('Loading default newsletter intro paragraph.')
 
         messagebody = jinja_env.get_template(message_template_file).render(
             book_list=book_list
