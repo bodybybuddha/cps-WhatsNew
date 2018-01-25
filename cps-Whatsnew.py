@@ -194,7 +194,7 @@ def buildnewsletter(
         message_template_file = os.path.join(config.settings['TEMPLATE_DIR'], config.settings['TEMPLATE_FILE'])
         message_banner_img = os.path.join(config.settings['TEMPLATE_DIR'], config.settings['TEMPLATE_BANNER_IMG'])
         message_unknown_img = os.path.join(config.settings['TEMPLATE_DIR'], config.settings['TEMPLATE_NOCOVER_IMG'])
-        message_intropara_file = os.path.join(config.settings['TEMPLATE_DIR'], config.settings['TEMPLATE_NOCOVER_IMG'])
+        message_intropara_file = os.path.join(config.settings['TEMPLATE_DIR'], config.settings['TEMPLATE_INTROPARA'])
 
         try:
             with open(message_intropara_file, 'r') as introparafile:
@@ -206,7 +206,8 @@ def buildnewsletter(
             logger.warn('Loading default newsletter intro paragraph.')
 
         messagebody = jinja_env.get_template(message_template_file).render(
-            book_list=book_list
+            book_list=book_list,
+            intropara_blk=message_intropara
         )
 
         mailer.start()
@@ -232,6 +233,7 @@ def buildnewsletter(
             message.to = winner
 
             if config.settings['DevMode']:
+                mailer.send(message)
                 logger.info('DevMode - Sending email to %s', winner)
             else:
                 mailer.send(message)
