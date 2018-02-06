@@ -20,7 +20,7 @@
             "class": "logging.handlers.RotatingFileHandler",
             "level": "INFO",
             "formatter": "simple",
-            "filename": "cps-Whatsnew.log",
+            "filename": "../logs/cps-Whatsnew.log",
             "maxBytes": 1049600,
             "backupCount": 3,
             "encoding": "utf8"

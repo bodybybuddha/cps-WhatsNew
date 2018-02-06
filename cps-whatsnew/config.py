@@ -10,6 +10,8 @@ settings = None
 
 
 def get_config(
+        default_path='logging.json',
+        env_key='CPSWHATSNEW_CFG'
 
 ):
     """Routine pull in the config file
@@ -19,9 +21,19 @@ def get_config(
     logger.info('Attempting to get config file.')
 
     try:
-        with open('config.json', 'r') as f:
-            settings = json.load(f)
-            logger.info('Opened config file: config.json.')
+        path = default_path
+        value = os.getenv(env_key, None)
+        if value:
+            path = value
+        if os.path.exists(path):
+            with open(path, 'rt') as f:
+                settings = json.load(f)
+                logger.info('Opened config file: config.json.')
+
+
+        #with open('config.json', 'r') as f:
+         #   settings = json.load(f)
+          #  logger.info('Opened config file: config.json.')
 
         # Since we got the configuration - let's check for the database config setting
         # and do some db operations if needed
