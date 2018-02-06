@@ -10,7 +10,7 @@ settings = None
 
 
 def get_config(
-        default_path='logging.json',
+        default_path='../custom/config.json',
         env_key='CPSWHATSNEW_CFG'
 
 ):

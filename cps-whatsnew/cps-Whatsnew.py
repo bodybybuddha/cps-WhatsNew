@@ -183,18 +183,20 @@ def buildnewsletter(
     )
 
     try:
-        cd = os.path.dirname(os.path.abspath(__file__))
 
         # Perform jinja
+
+        message_template_file = config.settings['TEMPLATE_FILE']
+        message_banner_img = os.path.join(config.settings['TEMPLATE_DIR'], config.settings['TEMPLATE_BANNER_IMG'])
+        message_unknown_img = os.path.join(config.settings['TEMPLATE_DIR'], config.settings['TEMPLATE_NOCOVER_IMG'])
+        message_intropara_file = os.path.join(config.settings['TEMPLATE_DIR'], config.settings['TEMPLATE_INTROPARA'])
+
+        cd = config.settings['TEMPLATE_DIR']
+        logger.info(cd)
 
         jinja_env = jinja2.Environment(
             loader=jinja2.FileSystemLoader(cd)
         )
-
-        message_template_file = os.path.join(config.settings['TEMPLATE_DIR'], config.settings['TEMPLATE_FILE'])
-        message_banner_img = os.path.join(config.settings['TEMPLATE_DIR'], config.settings['TEMPLATE_BANNER_IMG'])
-        message_unknown_img = os.path.join(config.settings['TEMPLATE_DIR'], config.settings['TEMPLATE_NOCOVER_IMG'])
-        message_intropara_file = os.path.join(config.settings['TEMPLATE_DIR'], config.settings['TEMPLATE_INTROPARA'])
 
         try:
             with open(message_intropara_file, 'r') as introparafile:
