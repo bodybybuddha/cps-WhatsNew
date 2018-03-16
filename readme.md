@@ -33,6 +33,9 @@ A new configuration item,DLSource, in the config file tells the script to either
 
 Also added a DistributionExclusionsList section to the configuration file.  This can be used to eliminate anyone who doesn't want the email.  Note - no@email is a needed value here.
 
+## Docker Image ##
+If you'd like to implement this via Docker, go here:  https://github.com/bodybybuddha/docker-cpswhatsnew
+
 ## Future Features ##
 
 None planned.
